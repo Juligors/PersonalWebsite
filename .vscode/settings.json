@@ -1,0 +1,4 @@
+{
+    "rust-analyzer.cargo.features": ["ssr", "hydrate"],
+    "files.autoSave": "off"
+}
