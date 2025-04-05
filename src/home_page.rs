@@ -122,7 +122,7 @@ fn Projects() -> impl IntoView {
                 teammates=None
             />
             <ProjectCard
-                name="Genetic prigramming framework"
+                name="Genetic programming framework"
                 description="Project implementing a Genetic Programming framework, designed to evolve programs written in a custom programming language. These programs are generated, evaluated, and refined over successive generations to solve a given problem or optimize a specific objective."
                 github="https://github.com/Juligors/AGH_Sem9_AdvancedPythonProgramming"
                 tech_stack=vec!["Python", "Antlr", "Docker"]
