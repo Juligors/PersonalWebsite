@@ -58,7 +58,6 @@ fn NavBar() -> impl IntoView {
                 <a href="/">
                     <i class="fas fa-house" />"Home"
                 </a>
-                // <a href="/CV.pdf" target="_blank">
                 <a href="/CV.pdf" target="_blank">
                     <i class="fas fa-file" /> "CV"
                 </a>
