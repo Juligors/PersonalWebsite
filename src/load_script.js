@@ -1,30 +1,67 @@
-// import init from './bella.js'
+const pressedButtonSelector = '[data-theme][aria-pressed="true"]';
+const defaultTheme = 'dark';
 
-// document.getElementById('loading-message').style.display = 'block';
+const applyTheme = (theme) => {
+  const target = document.querySelector(`[data-theme="${theme}"]`);
+  document.documentElement.setAttribute("data-selected-theme", theme);
+  document.querySelector(pressedButtonSelector).setAttribute('aria-pressed', 'false');
+  target.setAttribute('aria-pressed', 'true');
+};
 
-// try{
-//     init()
-// }
-// catch(error){}
-// finally{
-//     document.getElementById('loading-message').style.display = 'none';
-// }
+const handleThemeSelection = (event) => {
+  const target = event.target;
+  const isPressed = target.getAttribute('aria-pressed');
+  const theme = target.getAttribute('data-theme');
 
-// Function to initialize the Bevy simulation
-async function initializesimulation() {
-    // Show the loading message
-    document.getElementById('loading-message').style.display = 'block';
-  
-    try {
-      const wasmModule = await import('./bella.js');
-      await wasmModule.default(); // Initialize the simulation
-    } catch (error) {
-      console.error('Error loading the simulation:', error);
-      document.getElementById('loading-message').innerText = 'Failed to load the simulation.';
-    } finally {
-      document.getElementById('loading-message').style.display = 'none';
-    }
+  if (isPressed !== "true") {
+    applyTheme(theme);
+    localStorage.setItem('selected-theme', theme);
   }
-  
-  // Call the initializesimulation function when the window loads
-  window.onload = initializesimulation;
+}
+
+const setInitialTheme = () => {
+  const savedTheme = localStorage.getItem('selected-theme');
+  if (savedTheme && savedTheme !== defaultTheme) {
+    applyTheme(savedTheme);
+  }
+};
+
+setInitialTheme();
+
+const themeSwitcher = document.querySelector('#theme-switcher');
+const buttons = themeSwitcher.querySelectorAll('button');
+
+buttons.forEach((button) => {
+  button.addEventListener('click', handleThemeSelection);
+});
+
+async function loadBella() {
+  try {
+    const wasmModule = await import('./bella.js');
+    await wasmModule.default(); // Initialize the simulation
+  } catch (error) {
+    console.error('Error loading the simulation:', error);
+  }
+}
+
+
+async function initializeSimulation() {
+  // NOTE: Bevy scrolls to the canvas when it loads, we need to prevent it
+  const old_scroll_into_view = Element.prototype.scrollIntoView
+  Element.prototype.scrollIntoView = function () {
+    console.warn("Blocked scrollIntoView on", this);
+  };
+  const old_focus = HTMLCanvasElement.prototype.focus
+  HTMLCanvasElement.prototype.focus = function () {
+    console.warn("Blocked canvas.focus()");
+  };
+
+  await loadBella();
+
+  Element.prototype.scrollIntoView = old_scroll_into_view
+  HTMLCanvasElement.prototype.focus = old_focus
+
+  document.getElementById('loading-message').style.display = 'none';
+}
+
+await initializeSimulation();

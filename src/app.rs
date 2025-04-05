@@ -2,7 +2,7 @@ use leptos::prelude::*;
 use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
 use leptos_router::{
     components::{Route, Router, Routes},
-    StaticSegment,
+    path,
 };
 
 pub fn shell(options: LeptosOptions) -> impl IntoView {
@@ -31,16 +31,19 @@ pub fn App() -> impl IntoView {
     view! {
         // injects a stylesheet into the document <head>, id=leptos means cargo-leptos will hot-reload this stylesheet
         <Stylesheet id="leptos" href="/pkg/webella.css" />
-
         <Title text="Hello there 👋" />
 
         <Router>
+            <NavBar/>
             <main>
                 <Routes fallback=|| "Page not found.".into_view()>
-                    <Route path=StaticSegment("") view=HomePage />
+                    <Route path=path!("/") view=HomePage />
+                    <Route path=path!("/projects/bella") view=HomePage />
                 </Routes>
             </main>
+            <Footer/>
         </Router>
+
     }
 }
 
@@ -49,12 +52,10 @@ fn HomePage() -> impl IntoView {
     view! {
         <script type="module">{include_str!("load_script.js")}</script>
 
-        <NavBar/>
         <Intro/>
+        <Bella/>
         <Projects/>
         <QnA/>
-        <Bella/>
-        <Footer/>
     }
 }
 
@@ -85,10 +86,10 @@ fn Bella() -> impl IntoView {
                 </p>
             </div>
             <div class="simulation-container">
+                <div id="loading-message">"Loading the simulation 😎 Please wait"</div>
                 <canvas id="bevy-bella">
                     "Your browser does not support the canvas element :("
                 </canvas>
-                <div id="loading-message">"Loading simulation, please wait..."</div>
             </div>
         </div>
     }
@@ -162,10 +163,15 @@ fn Projects() -> impl IntoView {
 fn NavBar() -> impl IntoView {
     view! {
         <nav>
-            <a href="#section-intro">"Introduction"</a>
-            <a href="#section-qna">"Q&A"</a>
-            <a href="#section-bella">"Bella"</a>
-            <a href="#section-projects">"Projects"</a>
+            <div id="links">
+                <a href="#section-intro">"Introduction"</a>
+                <a href="#section-qna">"Q&A"</a>
+                <a href="#section-bella">"Bella"</a>
+                <a href="#section-projects">"Projects"</a>
+            </div>
+            <div id="theme-picker">
+                <ThemePicker/>
+            </div>
         </nav>
     }
 }
@@ -183,5 +189,15 @@ fn Footer() -> impl IntoView {
                 </a>.
             </p>
         </footer>
+    }
+}
+
+#[component]
+fn ThemePicker() -> impl IntoView {
+    view! {
+    <div id="theme-switcher">
+        <button data-theme="dark" aria-pressed="true">Dark</button>
+        <button data-theme="light" aria-pressed="false">Light</button>
+    </div>
     }
 }
