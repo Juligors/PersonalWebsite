@@ -127,7 +127,7 @@ fn QnA() -> impl IntoView {
 fn Intro() -> impl IntoView {
     view! {
         <p id="section-intro">
-            "Hi, I'm Julian Górski, an (almost) graduate student of"
+            "Hi, I'm Julian Górski, a student of"
             <a href="https://www.agh.edu.pl/en" target="_blank">" AGH"</a>
             " in"
             <a href="https://www.eaiib.agh.edu.pl/informatyka-i-systemy-inteligentne/" target="_blank">
