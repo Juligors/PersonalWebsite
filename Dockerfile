@@ -1,7 +1,4 @@
-# For nightly
-FROM rustlang/rust:nightly-bullseye AS builder
-# For stable
-# FROM rust:1.74-bullseye AS builder
+FROM rust:1.82-bookworm AS builder
 
 # Install cargo-binstall, which makes it easier to install other
 # cargo extensions like cargo-leptos
