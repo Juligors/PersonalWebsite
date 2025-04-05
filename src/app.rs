@@ -10,9 +10,10 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
         <!DOCTYPE html>
         <html lang="en">
             <head>
-                <link rel="icon" href="/favicon.png" type="image/x-icon" />
                 <meta charset="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <link rel="icon" href="/favicon.png" type="image/x-icon" />
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
                 <AutoReload options=options.clone() />
                 <HydrationScripts options />
                 <MetaTags />
@@ -39,7 +40,7 @@ pub fn App() -> impl IntoView {
             <main>
                 <Routes fallback=|| "Page not found.".into_view()>
                     <Route path=path!("/") view=HomePage />
-                    <Route path=path!("/projects/bella") view=HomePage />
+                    <Route path=path!("/cv") view=CvPage />
                 </Routes>
             </main>
             <Footer/>
@@ -165,10 +166,18 @@ fn NavBar() -> impl IntoView {
     view! {
         <nav>
             <div id="links">
-                <a href="#section-intro">"Introduction"</a>
-                <a href="#section-qna">"Q&A"</a>
-                <a href="#section-bella">"Bella"</a>
-                <a href="#section-projects">"Projects"</a>
+                <a href="/">
+                    <i class="fas fa-house" />"Home"
+                </a>
+                <a href="/cv" target="_blank">
+                    <i class="fas fa-file" /> "CV"
+                </a>
+                <a href="https://github.com/Juligors" target="_blank">
+                    <i class="fab fa-github" /> "GitHub"
+                </a>
+                <a href="https://linkedin.com/in/gorski-julian/" target="_blank">
+                    <i class="fab fa-linkedin"></i> "LinkedIn"
+                </a>
             </div>
             <div id="theme-picker">
                 <ThemePicker/>
@@ -200,5 +209,14 @@ fn ThemePicker() -> impl IntoView {
         <button data-theme="dark" aria-pressed="true">Dark</button>
         <button data-theme="light" aria-pressed="false">Light</button>
     </div>
+    }
+}
+
+#[component]
+fn CvPage() -> impl IntoView {
+    view! {
+        <div class="cv-container">
+            <iframe src="/CV.pdf" width="100%" height="800px" style="border: none;" />
+        </div>
     }
 }
