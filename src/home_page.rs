@@ -23,15 +23,7 @@ fn Intro() -> impl IntoView {
             <a href="https://www.eaiib.agh.edu.pl/informatyka-i-systemy-inteligentne/" target="_blank">
                 " IT and Intellighent Systems, specialization Artificial Intelligence and Data Analysis."
             </a>
-             " I'm currently working on an agent simulation written in"
-            <a href="https://www.rust-lang.org/" target="_blank">" Rust"</a>
-            " with"
-            <a href="https://bevyengine.org/" target="_blank">" Bevy."</a>
-            " It's for my Master's Thesis titled"
-            <i>" \"Evolution in multi-agent based systems. Theoretic and application-based aspects\"."</i>
-            " You can see my progress so far by interacting with embedded version of the simulation"
-            <a href="#section-bella">" below."</a>
-            " I update it on this website whenever I make enough progress to warrant it."
+            " I'm passionate about programming and I'd like to share some of my projects and skills here."
         </p>
     }
 }
@@ -43,7 +35,10 @@ fn Bella() -> impl IntoView {
             <h1>"Bella"</h1>
             <div>
                 <p>
-                    "This is my Master's Thesis project that I've been working on for some time now. It's meant to be a simulation of environment with plants as basis of a food chain, followed by herbivorous, carnivorous and omnivorous animals. Like any environment model, it has to be a significant simplification in relation to th real world, especially since I'm working on it on my own. Nonetheless, I've managed to implement those elements so far:
+                    "This is my Master's Thesis"
+                    <i>" \"Evolution in multi-agent based systems. Theoretic and application-based aspects\"."</i>
+
+                    " project that I've been working on for some time now. It's meant to be an agent simulation of environment with plants as basis of a food chain, followed by herbivorous, carnivorous and omnivorous animals. Like any environment model, it has to be a significant simplification in relation to th real world, especially since I'm working on it on my own. Nonetheless, I've managed to implement those elements so far:
                     "
                     <ul>
                         <li>
@@ -83,6 +78,7 @@ fn Bella() -> impl IntoView {
                         <li>"Pause with" <b>" 'P'"</b></li>
                         <li>"Inspect any entity and changing its components by choosing it with" <b>" left mouse button"</b></li>
                     </ul>
+                    "I update Bella version on this website whenever I make enough progress to warrant it."
                 </p>
             </div>
             <div class="simulation-container">
