@@ -6,7 +6,6 @@ pub fn HomePage() -> impl IntoView {
         <script type="module">{include_str!("load_script.js")}</script>
 
         <Intro/>
-        <CV/>
         <Bella/>
         <Projects/>
         <QnA/>
@@ -38,46 +37,52 @@ fn Intro() -> impl IntoView {
 }
 
 #[component]
-pub fn CV() -> impl IntoView {
-    view! {
-        // <div class="cv-container">
-        //     <iframe src="/CV.pdf" width="100%" height="1000px" style="border: none;" />
-        // </div>
-        <section class="cv-header">
-            <h1>"📄 My Curriculum Vitae"</h1>
-            <div class="cv-buttons">
-                <a href="/CV.pdf" target="_blank" class="btn">"Open PDF"</a>
-                <a href="/CV.pdf" download class="btn secondary">"Download"</a>
-            </div>
-        </section>
-    }
-}
-
-#[component]
 fn Bella() -> impl IntoView {
     view! {
         <div id="section-bella" class="section">
             <h1>"Bella"</h1>
             <div>
                 <p>
-                    <h3>"You can:"</h3>
+                    "This is my Master's Thesis project that I've been working on for some time now. It's meant to be a simulation of environment with plants as basis of a food chain, followed by herbivorous, carnivorous and omnivorous animals. Like any environment model, it has to be a significant simplification in relation to th real world, especially since I'm working on it on my own. Nonetheless, I've managed to implement those elements so far:
+                    "
                     <ul>
-                        <li>"Move around with" <b>" right mouse button"</b></li>
                         <li>
-                            <b>"Scroll"</b>
-                            " to zoom in/out"
+                            "Procedurally generated terrain with"
+                            <ul>
+                                <li>"different biomes with different parameters"</li>
+                                <li>"humidity and temperature propagation"</li>
+                                <li>"nutrients levels"</li>
+                            </ul>
                         </li>
-                        <li>"Reset with" <b>" 'R'"</b></li>
-                        <li>"Pause with" <b>" 'P'"</b></li>
+                        <li>"Reproducing and aging organisms, such as"
+                            <ul>
+                                <li>"plants"</li>
+                                <li>"animals with AI, capable of moving and attacking"</li>
+                            </ul>
+                        </li>
+                        <li>"Night and day cycle"</li>
+                        <li>"Carcass system for dead organisms"</li>
+                        <li>"Dominant and recessive genes"</li>
+                        <li>"Data collection system"</li>
+                        <li>"Ability to pause or restart simulation"</li>
+                        <li>"Debugging tools and gizmos"</li>
                         <li>
-                            "Inspect and change any entity by choosing it with"
-                            <b>" left mouse button"</b>
+                            "Multiple builds"
+                            <ul>
+                                <li>"Native windowed"</li>
+                                <li>"WASM-based windowed build for browser you're seeing now"</li>
+                                <li>"Native headless, for maximum performance for experiments"</li>
+                            </ul>
                         </li>
                     </ul>
-                    <h3>
-                        "There should be some plants near the"
-                        <span style="color:blue">" water"</span> " :D"
-                    </h3>
+                    <h3>"If you'd like to take a closer look at Bella you can:"</h3>
+                    <ul>
+                        <li>"Move around with" <b>" right mouse button"</b></li>
+                        <li><b>"Scroll"</b>" to zoom in/out"</li>
+                        <li>"Reset with" <b>" 'R'"</b></li>
+                        <li>"Pause with" <b>" 'P'"</b></li>
+                        <li>"Inspect any entity and changing its components by choosing it with" <b>" left mouse button"</b></li>
+                    </ul>
                 </p>
             </div>
             <div class="simulation-container">
