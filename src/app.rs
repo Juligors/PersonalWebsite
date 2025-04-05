@@ -39,7 +39,7 @@ pub fn App() -> impl IntoView {
 
         <Router>
             <NavBar/>
-            <main>
+            <main class="container">
                 <Routes fallback=|| "Page not found.".into_view()>
                     <Route path=path!("/") view=HomePage />
                     <Route path=path!("/cv") view=CvPage />
