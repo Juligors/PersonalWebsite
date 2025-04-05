@@ -16,3 +16,5 @@ Cargo.lock
 
 # bella files
 public/bella*
+
+.vscode/
