@@ -1,0 +1,16 @@
+.question-and-answer {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background: var(--code-bg);
+}
+
+.question {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.answer {
+    margin-left: 1rem;
+}

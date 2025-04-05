@@ -16,7 +16,7 @@ pub fn HomePage() -> impl IntoView {
 fn Intro() -> impl IntoView {
     view! {
         <h1>"Hi 👋"</h1>
-        <p id="section-intro">
+        <p id="section-intro" class="section">
             "I'm Julian Górski, a student of"
             <a href="https://www.agh.edu.pl/en" target="_blank">" AGH"</a>
             " in"
@@ -39,7 +39,7 @@ fn Intro() -> impl IntoView {
 #[component]
 fn Bella() -> impl IntoView {
     view! {
-        <div id="section-bella">
+        <div id="section-bella" class="section">
             <h1>"Bella"</h1>
             <div>
                 <p>
@@ -77,7 +77,7 @@ fn Bella() -> impl IntoView {
 fn Projects() -> impl IntoView {
     view! {
         <h1>"Other projects"</h1>
-        <p id="section-projects">
+        <p id="section-projects" class="section">
             """Some of the more interesting projects I've done during my university studies.
             Jeśli gdzieś znajdę linki to info o tym, że uczestniczę w projekcie Porównania Platform Agentowych z Gliderem/h
             
@@ -93,7 +93,7 @@ fn Projects() -> impl IntoView {
 fn QnA() -> impl IntoView {
     view! {
         <h1>"About me"</h1>
-        <p id="section-qna">
+        <p id="section-qna" class="section">
             <div class="question-and-answer">
                 <div class="question">"Favourite language"</div>
                 <div class="answer">"Rust, but I'm fine using anything"</div>

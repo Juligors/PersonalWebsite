@@ -1,0 +1,16 @@
+#theme-switcher {
+    button {
+        color: var(--link);
+        background-color: var(--bg);
+        border-radius: 8px;
+        border-style: none;
+        box-sizing: border-box;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 16px;
+    }
+
+    button:hover {
+        color: var(--accent);
+    }
+}
