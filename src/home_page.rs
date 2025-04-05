@@ -6,6 +6,7 @@ pub fn HomePage() -> impl IntoView {
         <script type="module">{include_str!("load_script.js")}</script>
 
         <Intro/>
+        <CV/>
         <Bella/>
         <Projects/>
         <QnA/>
@@ -33,6 +34,22 @@ fn Intro() -> impl IntoView {
             <a href="#section-bella">" below."</a>
             " I update it on this website whenever I make enough progress to warrant it."
         </p>
+    }
+}
+
+#[component]
+pub fn CV() -> impl IntoView {
+    view! {
+        // <div class="cv-container">
+        //     <iframe src="/CV.pdf" width="100%" height="1000px" style="border: none;" />
+        // </div>
+        <section class="cv-header">
+            <h1>"📄 My Curriculum Vitae"</h1>
+            <div class="cv-buttons">
+                <a href="/CV.pdf" target="_blank" class="btn">"Open PDF"</a>
+                <a href="/CV.pdf" download class="btn secondary">"Download"</a>
+            </div>
+        </section>
     }
 }
 

@@ -5,7 +5,7 @@ use leptos_router::{
     path,
 };
 
-use crate::{cv_page::CvPage, home_page::HomePage};
+use crate::home_page::HomePage;
 
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
@@ -42,7 +42,6 @@ pub fn App() -> impl IntoView {
             <main class="container">
                 <Routes fallback=|| "Page not found.".into_view()>
                     <Route path=path!("/") view=HomePage />
-                    <Route path=path!("/cv") view=CvPage />
                 </Routes>
             </main>
             <Footer/>
@@ -59,7 +58,7 @@ fn NavBar() -> impl IntoView {
                 <a href="/">
                     <i class="fas fa-house" />"Home"
                 </a>
-                <a href="/cv" target="_blank">
+                <a href="/cv.pdf" target="_blank">
                     <i class="fas fa-file" /> "CV"
                 </a>
                 <a href="https://github.com/Juligors" target="_blank">
