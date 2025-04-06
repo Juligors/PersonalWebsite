@@ -105,35 +105,30 @@ fn Projects() -> impl IntoView {
                 description="A multi-agent ecosystem simulation built with Rust and Bevy. Scroll down to see and test it out 😉"
                 github="https://github.com/Juligors/Bella"
                 tech_stack=vec!["Rust", "Bevy", "ECS", "WASM"]
-                teammates=None
             />
             <ProjectCard
                 name="AGH Coin"
                 description="Cryptocurrency with Proof Of Stake consensus algorithm. This projects contains blockchain itself, desktop wallet and desktop explorer."
                 github="https://github.com/Juligors/AGH_Sem6_ProjectStudio2"
                 tech_stack=vec!["C#", ".NET Core", "gRPC", "LiteDB", "CLI"]
-                teammates=Some(vec![("Dominik Kikla", "https://github.com/DomKik")])
             />
             <ProjectCard
                 name="This website"
                 description="It's made with Rust, HTML and CSS with a sprinkle of JavaScript. It's dockerized to make it easier to host it on Heroku."
                 github="https://github.com/Juligors/PersonalWebsite"
                 tech_stack=vec!["Rust", "Leptos", "WASM", "JavaScript", "HTML", "SCSS", "Docker"]
-                teammates=None
             />
             <ProjectCard
                 name="Genetic programming framework"
                 description="Project implementing a Genetic Programming framework, designed to evolve programs written in a custom programming language. These programs are generated, evaluated, and refined over successive generations to solve a given problem or optimize a specific objective."
                 github="https://github.com/Juligors/AGH_Sem9_AdvancedPythonProgramming"
                 tech_stack=vec!["Python", "Antlr", "Docker"]
-                teammates=Some(vec![("Dominik Kikla", "https://github.com/DomKik"), ("Melisa Bektas", "https://github.com/meliisa1313")])
             />
             <ProjectCard
                 name="Mel"
                 description="My Engineering Thesis, Agent based simulation game, supporting gameplay through both desktop application and network interface based on gRPC"
                 github="https://github.com/Juligors/Mel"
                 tech_stack=vec!["C#", ".NET Core", "MonoGame", "gRPC"]
-                teammates=None
             />
         </section>
     }
@@ -145,27 +140,20 @@ fn ProjectCard(
     description: &'static str,
     github: &'static str,
     tech_stack: Vec<&'static str>,
-    teammates: Option<Vec<(&'static str, &'static str)>>,
 ) -> impl IntoView {
     view! {
-        <div class="project-card">
-            <h2>{name}</h2>
-            <p>{description}</p>
+        <a href={github} target="_blank" class="project-card" role="group">
+            <div class="card-inner">
+                <h2>{name}</h2>
+                <p>{description}</p>
 
-            <div class="tech-tags">
-                { tech_stack.into_iter().map(|tech| view! { <span class="tag">{tech}</span> }).collect_view() }
+                <div class="tech-tags">
+                    { tech_stack.into_iter().map(|tech| view! {
+                        <span class="tag">{tech}</span>
+                    }).collect_view() }
+                </div>
             </div>
-
-            <div class="project-links">
-                <a href={github} target="_blank"><i class="fab fa-github"></i>" View on GitHub"</a>
-
-                {teammates.map(|t| view! {
-                    <div class="teammates">
-                        "Made with: " {t.into_iter().map(|(name, link)| view! { <a href={link} target="_blank">{name}</a> }).collect_view()}
-                    </div>
-                })}
-            </div>
-        </div>
+        </a>
     }
 }
 
