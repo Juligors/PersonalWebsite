@@ -93,7 +93,7 @@ fn ProjectCard(
 fn QnA() -> impl IntoView {
     view! {
         <h1>"About me"</h1>
-        <p class="section">
+        <div class="section">
             <div class="question-and-answer">
                 <div class="question">"Favourite language"</div>
                 <div class="answer">"Rust, but I'm fine using anything"</div>
@@ -114,6 +114,6 @@ fn QnA() -> impl IntoView {
                 <div class="question">"Favourite book"</div>
                 <div class="answer">"Twilight"</div>
             </div>
-        </p>
+        </div>
     }
 }
