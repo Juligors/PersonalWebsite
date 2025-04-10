@@ -5,7 +5,7 @@ use leptos_router::{
     path,
 };
 
-use crate::{game_of_life_page::GameOfLifePage, home_page::HomePage};
+use crate::{bella_page::BellaPage, game_of_life_page::GameOfLifePage, home_page::HomePage};
 
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
@@ -39,8 +39,10 @@ pub fn App() -> impl IntoView {
 
         <Router>
             <Layout>
+                <script type="module">{include_str!("theme_load_script.js")}</script>
                 <Routes fallback=|| "Page not found.".into_view()>
                     <Route path=path!("/") view=HomePage />
+                    <Route path=path!("/bella") view=BellaPage />
                     <Route path=path!("/game-of-life") view=GameOfLifePage />
                 </Routes>
             </Layout>

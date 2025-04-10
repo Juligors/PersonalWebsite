@@ -1,6 +1,7 @@
 pub mod app;
-mod home_page;
+mod bella_page;
 mod game_of_life_page;
+mod home_page;
 
 #[cfg(feature = "hydrate")]
 #[wasm_bindgen::prelude::wasm_bindgen]
