@@ -38,16 +38,25 @@ pub fn App() -> impl IntoView {
         <Title text="Hello there 👋" />
 
         <Router>
-            <NavBar/>
-            <main class="container">
+            <Layout>
                 <Routes fallback=|| "Page not found.".into_view()>
                     <Route path=path!("/") view=HomePage />
                     <Route path=path!("/game-of-life") view=GameOfLifePage />
                 </Routes>
-            </main>
-            <Footer/>
+            </Layout>
         </Router>
 
+    }
+}
+
+#[component]
+fn Layout(children: Children) -> impl IntoView {
+    view! {
+        <div class="layout">
+            <NavBar/>
+            <main class="container">{children()}</main>
+            <Footer/>
+        </div>
     }
 }
 
