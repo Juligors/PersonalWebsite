@@ -76,6 +76,7 @@ fn NavBar() -> impl IntoView {
                 <a href="/game-of-life">
                     <i class="fas fa-square" />"Game of Life"
                 </a>
+                <hr class="divider"/>
                 <a href="/CV.pdf" target="_blank">
                     <i class="fas fa-file" /> "CV"
                 </a>
