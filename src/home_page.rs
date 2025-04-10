@@ -17,7 +17,7 @@ pub fn HomePage() -> impl IntoView {
 fn Intro() -> impl IntoView {
     view! {
         <h1>"Hi 👋"</h1>
-        <p id="section-intro" class="section">
+        <p class="section">
             "I'm Julian Górski, a student of"
             <a href="https://www.agh.edu.pl/en" target="_blank">" AGH"</a>
             " in"
@@ -32,7 +32,7 @@ fn Intro() -> impl IntoView {
 #[component]
 fn Bella() -> impl IntoView {
     view! {
-        <div id="section-bella" class="section">
+        <div class="section">
             <h1>"Bella"</h1>
             <div>
                 <p>
@@ -160,7 +160,7 @@ fn ProjectCard(
 fn QnA() -> impl IntoView {
     view! {
         <h1>"About me"</h1>
-        <p id="section-qna" class="section">
+        <p class="section">
             <div class="question-and-answer">
                 <div class="question">"Favourite language"</div>
                 <div class="answer">"Rust, but I'm fine using anything"</div>
