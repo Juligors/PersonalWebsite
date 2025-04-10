@@ -1,9 +1,8 @@
-use leptos::{prelude::*, task::spawn_local};
+use leptos::prelude::*;
 
 #[component]
 pub fn HomePage() -> impl IntoView {
     view! {
-        <MongoTest />
         <Intro/>
         <Projects/>
         <QnA/>
@@ -117,39 +116,4 @@ fn QnA() -> impl IntoView {
             </div>
         </p>
     }
-}
-
-#[component]
-fn MongoTest() -> impl IntoView {
-    view! {
-        <button on:click=move |_|{
-            spawn_local(async {
-                call_me().await;
-            })
-        }
-        >"Hi there, click me baby!"</button>
-    }
-}
-
-#[server]
-async fn call_me() -> Result<(), ServerFnError> {
-    use mongodb::{
-        bson::{doc, Document},
-        Client, Collection,
-    };
-
-    let username = std::env::var("MONGO_USERNAME")?;
-    let password = std::env::var("MONGO_PASSWORD")?;
-
-    let uri = format!("mongodb+srv://{}:{}@cluster0.vbddlih.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", username, password);
-    let client = Client::with_uri_str(uri).await?;
-    let database = client.database("sample_mflix");
-    let my_coll: Collection<Document> = database.collection("movies");
-    let my_movie = my_coll
-        .find_one(doc! { "title": "The Perils of Pauline" })
-        .await?;
-
-    println!("Found a movie:\n{:#?}", my_movie);
-
-    Ok(())
 }
