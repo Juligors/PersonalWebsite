@@ -5,7 +5,7 @@ use leptos_router::{
     path,
 };
 
-use crate::home_page::HomePage;
+use crate::{game_of_life_page::GameOfLifePage, home_page::HomePage};
 
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
@@ -42,6 +42,7 @@ pub fn App() -> impl IntoView {
             <main class="container">
                 <Routes fallback=|| "Page not found.".into_view()>
                     <Route path=path!("/") view=HomePage />
+                    <Route path=path!("/game-of-life") view=GameOfLifePage />
                 </Routes>
             </main>
             <Footer/>
