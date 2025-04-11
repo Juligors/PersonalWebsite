@@ -51,11 +51,13 @@ pub fn ShipListComponent(
 
     let save_ship_action = ServerAction::<SaveShip>::new();
     let delete_ship_action = ServerAction::<DeleteShip>::new();
+    let edit_ship_action = ServerAction::<EditShip>::new();
     let ships = Resource::new(
         move || {
             (
                 save_ship_action.version().get(),
                 delete_ship_action.version().get(),
+                edit_ship_action.version().get(),
             )
         },
         |_| async { get_ships().await.unwrap_or_else(|_| vec![]) },
@@ -75,7 +77,8 @@ pub fn ShipListComponent(
                         </tr>
                     </thead>
                     <tbody>
-                        { ship_list.iter().map(|ship| view! { <ShipRow ship=ship.clone() delete_ship_action=delete_ship_action/> }).collect::<Vec<_>>()}
+                        { ship_list.iter().map(|ship| view! { <ShipRow ship=ship.clone() delete_ship_action=delete_ship_action board=board set_board=set_board width=width save_ship_action=save_ship_action edit_ship_action=edit_ship_action /> }).collect::<Vec<_>>()}
+
                     </tbody>
                 </table>
             })}
@@ -94,14 +97,6 @@ pub fn CreateShipDialog(
 ) -> impl IntoView {
     let on_click_save = move |_| {
         let board = board.get();
-        // spawn_local(async { let _ = save_ship(board).await; });
-        // let save_ship_action = Action::new(|input: &Board| {
-        //     let input = input.to_owned();
-        //     async move { save_ship(input).await }
-        // });
-        // save_ship_action.dispatch(board);
-
-        // let save_ship_action = ServerAction::<SaveShip>::new();
         save_ship_action.dispatch(SaveShip { board });
 
         set_dialog_is_open.set(false);
@@ -119,13 +114,23 @@ pub fn CreateShipDialog(
 }
 
 #[component]
-fn ShipRow(ship: Ship, delete_ship_action: ServerAction<DeleteShip>) -> impl IntoView {
+fn ShipRow(
+    ship: Ship,
+    delete_ship_action: ServerAction<DeleteShip>,
+    board: ReadSignal<Board>,
+    set_board: WriteSignal<Board>,
+    width: ReadSignal<usize>,
+    save_ship_action: ServerAction<SaveShip>,
+    edit_ship_action: ServerAction<EditShip>,
+) -> impl IntoView {
     let (dialog_open, set_dialog_open) = signal(false);
+
+    let ship_cpy = ship.clone();
 
     view! {
         <tr>
-            <td>{ship.name.into_view()}</td>
-            <td>{ship.creation_date.format("%Y-%m-%d %H:%M:%S").to_string().into_view()}</td>
+            <td>{ship.name.clone().into_view()}</td>
+            <td>{ship.creation_date.clone().format("%Y-%m-%d %H:%M:%S").to_string().into_view()}</td>
             <td>
                 <button on:click=move |_| set_dialog_open.set(true)>
                     "View Drawing"
@@ -138,7 +143,7 @@ fn ShipRow(ship: Ship, delete_ship_action: ServerAction<DeleteShip>) -> impl Int
                         <button on:click=move |_| set_dialog_open.set(false)>
                             "Close"
                         </button>
-                        <ShipDrawing cells=ship.cells.clone() />
+                        <EditShipDialog set_dialog_is_open=set_dialog_open board=board set_board=set_board width=width cells=ship.cells.clone()   edit_ship_action=edit_ship_action ship=ship_cpy.clone()/>
                     </dialog>
                 </Show>
             </td>
@@ -173,7 +178,40 @@ pub fn ShipDrawing(cells: Vec<CellData>) -> impl IntoView {
     let grid_template_columns = move || format!("repeat({}, 20px)", board.width);
 
     view! {
+        // <BoardComponent board=board set_board=set_board width=width/>
         <div class="board" style:grid-template-columns=grid_template_columns>{cells}</div>
+    }
+}
+
+#[component]
+pub fn EditShipDialog(
+    set_dialog_is_open: WriteSignal<bool>,
+    board: ReadSignal<Board>,
+    set_board: WriteSignal<Board>,
+    width: ReadSignal<usize>,
+    cells: Vec<CellData>,
+    edit_ship_action: ServerAction<EditShip>,
+    ship: Ship,
+) -> impl IntoView {
+    set_board.update(|board| {
+        for CellData { x, y, is_alive } in cells {
+            board.cells[y][x] = is_alive;
+        }
+    });
+
+    let on_click_save = move |_| {
+        let board = board.get();
+        edit_ship_action.dispatch(EditShip {
+            input: (ship.clone(), board),
+        });
+
+        set_dialog_is_open.set(false);
+        set_board.set(Board::new_for_drawing());
+    };
+
+    view! {
+        <button on:click=on_click_save>"Save ship"</button>
+        <BoardComponent board=board set_board=set_board width=width/>
     }
 }
 
@@ -269,6 +307,43 @@ pub async fn delete_ship(ship_id: String) -> Result<(), ServerFnError> {
         .collection("ships");
 
     let _ = collection.delete_one(doc! {"_id": ship_id}).await;
+
+    Ok(())
+}
+#[server]
+pub async fn edit_ship(input: (Ship, Board)) -> Result<(), ServerFnError> {
+    use mongodb::{bson::doc, Client, Collection};
+
+    let username = std::env::var("MONGO_USERNAME")?;
+    let password = std::env::var("MONGO_PASSWORD")?;
+    let uri = format!("mongodb+srv://{}:{}@cluster0.vbddlih.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", username, password);
+
+    let collection: Collection<Ship> = Client::with_uri_str(uri)
+        .await?
+        .database("game_of_life")
+        .collection("ships");
+
+    let (s, board) = input;
+    let ship = Ship {
+        id: s.id,
+        name: s.name,
+        creation_date: s.creation_date,
+        cells: board
+            .cells
+            .iter()
+            .enumerate()
+            .flat_map(|(y, row)| {
+                row.iter()
+                    .enumerate()
+                    .map(|(x, &is_alive)| CellData { x, y, is_alive })
+                    .collect::<Vec<_>>()
+            })
+            .collect(),
+    };
+
+    // let _ = collection
+    //     .replace_one(doc! {"_id": ship.id}, doc! {"cells": ship.cells})
+    //     .await;
 
     Ok(())
 }
