@@ -47,7 +47,6 @@ pub fn App() -> impl IntoView {
                 </Routes>
             </Layout>
         </Router>
-
     }
 }
 
