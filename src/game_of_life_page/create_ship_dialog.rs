@@ -18,7 +18,8 @@ pub fn CreateShipDialog(
         <button on:click=move |_| set_dialog_is_open.set(false)>"Close"</button>
             <button on:click=move |_|{
                 let board = board.get();
-                spawn_local(async { let _ = save_ship(board).await; })
+                spawn_local(async { let _ = save_ship(board).await; });
+                set_dialog_is_open.set(false);
             }>"Save ship"</button>
             <BoardComponent board=board set_board=set_board width=width/>
         </dialog>
