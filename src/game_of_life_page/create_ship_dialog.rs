@@ -20,6 +20,7 @@ pub fn CreateShipDialog(
                 let board = board.get();
                 spawn_local(async { let _ = save_ship(board).await; });
                 set_dialog_is_open.set(false);
+                set_board.set(Board::new_for_drawing());
             }>"Save ship"</button>
             <BoardComponent board=board set_board=set_board width=width/>
         </dialog>

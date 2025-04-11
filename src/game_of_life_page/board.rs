@@ -3,6 +3,8 @@ use std::{rc::Rc, sync::Arc};
 use leptos::prelude::*;
 use serde::{Deserialize, Serialize};
 
+use super::{INITIAL_HEIGHT, INITIAL_WIDTH};
+
 #[component]
 pub fn BoardComponent(
     board: ReadSignal<Board>,
@@ -55,6 +57,10 @@ impl Board {
             height,
             cells: vec![vec![false; width]; height],
         }
+    }
+
+    pub fn new_for_drawing() -> Board {
+        Board::new(INITIAL_WIDTH, INITIAL_HEIGHT)
     }
 
     pub fn compute_next_generation(&self) -> Board {

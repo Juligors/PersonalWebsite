@@ -15,10 +15,10 @@ pub fn GameOfLifePage() -> impl IntoView {
         <GameOfLife />
     }
 }
-const INITIAL_WIDTH: usize = 10;
+pub const INITIAL_WIDTH: usize = 10;
 const MIN_WIDTH: usize = 3;
 const MAX_WIDTH: usize = 30;
-const INITIAL_HEIGHT: usize = 10;
+pub const INITIAL_HEIGHT: usize = 10;
 const MIN_HEIGHT: usize = 3;
 const MAX_HEIGHT: usize = 30;
 
