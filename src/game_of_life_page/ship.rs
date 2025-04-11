@@ -3,7 +3,10 @@ use leptos::{prelude::*, task::spawn_local};
 use nanoid::nanoid;
 use serde::{Deserialize, Serialize};
 
-use crate::game_of_life_page::{board::Board, INITIAL_HEIGHT, INITIAL_WIDTH};
+use crate::game_of_life_page::{
+    board::{Board, BoardComponent},
+    INITIAL_HEIGHT, INITIAL_WIDTH,
+};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Ship {
@@ -39,16 +42,29 @@ pub struct RandomName {
 }
 
 #[component]
-pub fn ShipListComponent() -> impl IntoView {
-    let (count, _) = signal(0);
+pub fn ShipListComponent(
+    board: ReadSignal<Board>,
+    set_board: WriteSignal<Board>,
+    width: ReadSignal<usize>,
+) -> impl IntoView {
+    let (dialog_is_open, set_dialog_is_open) = signal(false);
 
+    let save_ship_action = ServerAction::<SaveShip>::new();
+    let delete_ship_action = ServerAction::<DeleteShip>::new();
     let ships = Resource::new(
-        move || count.get(),
+        move || {
+            (
+                save_ship_action.version().get(),
+                delete_ship_action.version().get(),
+            )
+        },
         |_| async { get_ships().await.unwrap_or_else(|_| vec![]) },
     );
 
     view! {
-        <Suspense fallback=|| view! { <p>"Loading ships..."</p> }>
+        <CreateShipDialog dialog_is_open=dialog_is_open set_dialog_is_open=set_dialog_is_open board=board set_board=set_board width=width save_ship_action=save_ship_action/>
+
+        <Transition fallback=|| view! { <p>"Loading ships..."</p> }>
             {move || ships.get().map(|ship_list| view! {
                 <table>
                     <thead>
@@ -59,16 +75,51 @@ pub fn ShipListComponent() -> impl IntoView {
                         </tr>
                     </thead>
                     <tbody>
-                        { ship_list.iter().map(|ship| view! { <ShipRow ship=ship.clone() /> }).collect::<Vec<_>>()}
+                        { ship_list.iter().map(|ship| view! { <ShipRow ship=ship.clone() delete_ship_action=delete_ship_action/> }).collect::<Vec<_>>()}
                     </tbody>
                 </table>
             })}
-        </Suspense>
+        </Transition>
     }
 }
 
 #[component]
-fn ShipRow(ship: Ship) -> impl IntoView {
+pub fn CreateShipDialog(
+    dialog_is_open: ReadSignal<bool>,
+    set_dialog_is_open: WriteSignal<bool>,
+    board: ReadSignal<Board>,
+    set_board: WriteSignal<Board>,
+    width: ReadSignal<usize>,
+    save_ship_action: ServerAction<SaveShip>,
+) -> impl IntoView {
+    let on_click_save = move |_| {
+        let board = board.get();
+        // spawn_local(async { let _ = save_ship(board).await; });
+        // let save_ship_action = Action::new(|input: &Board| {
+        //     let input = input.to_owned();
+        //     async move { save_ship(input).await }
+        // });
+        // save_ship_action.dispatch(board);
+
+        // let save_ship_action = ServerAction::<SaveShip>::new();
+        save_ship_action.dispatch(SaveShip { board });
+
+        set_dialog_is_open.set(false);
+        set_board.set(Board::new_for_drawing());
+    };
+
+    view! {
+        <button on:click=move |_| set_dialog_is_open.set(true)>"Create a ship!"</button>
+        <dialog open=move || dialog_is_open.get()>
+            <button on:click=move |_| set_dialog_is_open.set(false)>"Close"</button>
+            <button on:click=on_click_save>"Save ship"</button>
+            <BoardComponent board=board set_board=set_board width=width/>
+        </dialog>
+    }
+}
+
+#[component]
+fn ShipRow(ship: Ship, delete_ship_action: ServerAction<DeleteShip>) -> impl IntoView {
     let (dialog_open, set_dialog_open) = signal(false);
 
     view! {
@@ -79,10 +130,7 @@ fn ShipRow(ship: Ship) -> impl IntoView {
                 <button on:click=move |_| set_dialog_open.set(true)>
                     "View Drawing"
                 </button>
-                <button on:click=move |_| {
-                    let id = ship.id.clone();
-                    spawn_local(async { let _ = delete_ship(id).await; });
-                }>
+                <button on:click=move |_| { delete_ship_action.dispatch(DeleteShip { ship_id: ship.id.clone()}); }>
                     "Delete"
                 </button>
                 <Show when=move || dialog_open.get()>

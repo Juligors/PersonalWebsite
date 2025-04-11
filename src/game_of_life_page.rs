@@ -1,12 +1,10 @@
 use std::time::Duration;
 
 use board::Board;
-use create_ship_dialog::CreateShipDialog;
 use leptos::{ev::SubmitEvent, html, prelude::*};
 use ship::{ShipDrawing, ShipListComponent};
 
 mod board;
-mod create_ship_dialog;
 mod ship;
 
 #[component]
@@ -70,8 +68,6 @@ fn GameOfLife() -> impl IntoView {
     //     set_board.set(create_board(width.get(), height.get()));
     // };
 
-    let (dialog_is_open, set_dialog_is_open) = signal(false);
-
     let on_submit = move |ev: SubmitEvent| {
         ev.prevent_default();
 
@@ -98,8 +94,6 @@ fn GameOfLife() -> impl IntoView {
     view! {
         <h1>"Game of Life"</h1>
 
-        <CreateShipDialog dialog_is_open=dialog_is_open set_dialog_is_open=set_dialog_is_open board=board set_board=set_board width=width/>
-
         <form on:submit=on_submit>
             <label for="width">"Width: "</label>
             <input id="width" type="number" value=width node_ref=width_input_el />
@@ -110,7 +104,7 @@ fn GameOfLife() -> impl IntoView {
             <input type="submit" value="Set" />
         </form>
 
-        <ShipListComponent/>
+        <ShipListComponent board=board set_board=set_board width=width/>
 
         // <button on:click=move |_| start_stop()>{move || if running.get() {"Stop"} else {"Start"}}</button>
         // <button on:click=move |_| reset()>"Reset"</button>
