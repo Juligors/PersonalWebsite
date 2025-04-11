@@ -1,6 +1,10 @@
 use std::time::Duration;
 
+use board::Board;
 use leptos::{ev::SubmitEvent, html, prelude::*, task::spawn_local};
+
+mod board;
+mod cell;
 
 #[component]
 pub fn GameOfLifePage() -> impl IntoView {
@@ -110,63 +114,6 @@ fn GameOfLife() -> impl IntoView {
     }
 }
 
-#[component]
-fn Board(
-    board: ReadSignal<Vec<Vec<bool>>>,
-    set_board: WriteSignal<Vec<Vec<bool>>>,
-    width: ReadSignal<usize>,
-) -> impl IntoView {
-    let cells = move || {
-        board
-            .get()
-            .iter()
-            .enumerate()
-            .map(|(y, row)| {
-                row.iter()
-                    .enumerate()
-                    .map(move |(x, &is_alive)| {
-                        view! {
-                            <Cell set_board=set_board x=x y=y is_alive=is_alive />
-                        }
-                    })
-                    .collect::<Vec<_>>()
-            })
-            .collect::<Vec<_>>()
-    };
-
-    let grid_template_columns = move || format!("repeat({}, 20px)", width.get());
-
-    view! {
-        <div class="board" style:grid-template-columns=grid_template_columns>{cells}</div>
-    }
-}
-
-#[component]
-fn Cell(
-    set_board: WriteSignal<Vec<Vec<bool>>>,
-    x: usize,
-    y: usize,
-    is_alive: bool,
-) -> impl IntoView {
-    let on_click = move |_| {
-        set_board.update(|board| {
-            if let Some(row_vec) = board.get_mut(y) {
-                if let Some(cell) = row_vec.get_mut(x) {
-                    *cell = !*cell;
-                }
-            }
-        });
-    };
-
-    let color = move || if is_alive { "black" } else { "gray" };
-
-    view! {
-        <div class="cell" style:background-color=color on:click=on_click></div>
-    }
-}
-
-////////
-
 fn compute_next_generation(board: &Vec<Vec<bool>>, width: usize, height: usize) -> Vec<Vec<bool>> {
     let mut next_board = create_board(width, height);
 
@@ -210,7 +157,7 @@ fn count_live_neighbors(board: &[Vec<bool>], row: usize, col: usize) -> usize {
     count
 }
 
-///////
+/////
 
 #[component]
 fn MongoTest() -> impl IntoView {
