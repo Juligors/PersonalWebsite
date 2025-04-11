@@ -1,11 +1,14 @@
 use chrono::{DateTime, Utc};
-use leptos::{prelude::*, task::spawn_local};
+use leptos::prelude::*;
+use nanoid::nanoid;
 use serde::{Deserialize, Serialize};
 
 use crate::game_of_life_page::{board::Board, INITIAL_HEIGHT, INITIAL_WIDTH};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Ship {
+    #[serde(rename = "_id")]
+    pub id: String,
     name: String,
     creation_date: DateTime<Utc>,
     cells: Vec<CellData>,
@@ -132,6 +135,7 @@ pub async fn save_ship(board: Board) -> Result<(), ServerFnError> {
     use mongodb::{Client, Collection};
 
     let ship = Ship {
+        id: nanoid!(),
         name: "nothing for now".into(),
         creation_date: chrono::offset::Utc::now(),
         cells: board

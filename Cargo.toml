@@ -18,6 +18,7 @@ wasm-bindgen = { version = "=0.2.100", optional = true }
 mongodb =  { version = "3.2.3", optional = true }
 serde = { version = "1.0.219", features = ["derive"] }
 chrono = { version = "0.4.40", features = ["serde"] }
+nanoid = "0.4.0"
 
 [features]
 hydrate = [
