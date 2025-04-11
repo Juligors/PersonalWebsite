@@ -21,6 +21,23 @@ pub struct CellData {
     is_alive: bool,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct RandomNameList {
+    results: Vec<RandomNameData>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct RandomNameData {
+    name: RandomName,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct RandomName {
+    title: String,
+    first: String,
+    last: String,
+}
+
 #[component]
 pub fn ShipListComponent() -> impl IntoView {
     let (count, _) = signal(0);
@@ -138,11 +155,30 @@ async fn get_ships() -> Result<Vec<Ship>, ServerFnError> {
 
 #[server]
 pub async fn save_ship(board: Board) -> Result<(), ServerFnError> {
+    async fn get_random_ship_name() -> Result<String, ServerFnError> {
+        let response_body = reqwest::Client::new()
+            .get("https://randomuser.me/api/")
+            .send()
+            .await?
+            .text()
+            .await?;
+
+        let data: RandomNameList = serde_json::from_str(&response_body)?;
+        let name = format!(
+            "{} {} {}",
+            data.results[0].name.title, data.results[0].name.first, data.results[0].name.last
+        );
+
+        Ok(name)
+    }
+
     use mongodb::{Client, Collection};
 
     let ship = Ship {
         id: nanoid!(),
-        name: "nothing for now".into(),
+        name: get_random_ship_name()
+            .await
+            .unwrap_or("A very unique name".into()),
         creation_date: chrono::offset::Utc::now(),
         cells: board
             .cells
