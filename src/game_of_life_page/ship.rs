@@ -1,5 +1,5 @@
 use chrono::{DateTime, Utc};
-use leptos::prelude::*;
+use leptos::{prelude::*, task::spawn_local};
 use nanoid::nanoid;
 use serde::{Deserialize, Serialize};
 
@@ -61,6 +61,12 @@ fn ShipRow(ship: Ship) -> impl IntoView {
             <td>
                 <button on:click=move |_| set_dialog_open.set(true)>
                     "View Drawing"
+                </button>
+                <button on:click=move |_| {
+                    let id = ship.id.clone();
+                    spawn_local(async { let _ = delete_ship(id).await; });
+                }>
+                    "Delete"
                 </button>
                 <Show when=move || dialog_open.get()>
                     <dialog open>
@@ -161,6 +167,24 @@ pub async fn save_ship(board: Board) -> Result<(), ServerFnError> {
         .collection("ships");
 
     collection.insert_one(ship).await?;
+
+    Ok(())
+}
+
+#[server]
+pub async fn delete_ship(ship_id: String) -> Result<(), ServerFnError> {
+    use mongodb::{bson::doc, Client, Collection};
+
+    let username = std::env::var("MONGO_USERNAME")?;
+    let password = std::env::var("MONGO_PASSWORD")?;
+    let uri = format!("mongodb+srv://{}:{}@cluster0.vbddlih.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", username, password);
+
+    let collection: Collection<Ship> = Client::with_uri_str(uri)
+        .await?
+        .database("game_of_life")
+        .collection("ships");
+
+    let _ = collection.delete_one(doc! {"_id": ship_id}).await;
 
     Ok(())
 }
