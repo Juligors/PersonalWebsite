@@ -1,6 +1,5 @@
 pub mod app;
 mod bella_page;
-mod game_of_life_page;
 mod home_page;
 
 #[cfg(feature = "hydrate")]

@@ -5,7 +5,7 @@ use leptos_router::{
     path,
 };
 
-use crate::{bella_page::BellaPage, game_of_life_page::GameOfLifePage, home_page::HomePage};
+use crate::{bella_page::BellaPage, home_page::HomePage};
 
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
@@ -43,7 +43,6 @@ pub fn App() -> impl IntoView {
                 <Routes fallback=|| "Page not found.".into_view()>
                     <Route path=path!("/") view=HomePage />
                     <Route path=path!("/bella") view=BellaPage />
-                    <Route path=path!("/game-of-life") view=GameOfLifePage />
                 </Routes>
             </Layout>
         </Router>
@@ -71,9 +70,6 @@ fn NavBar() -> impl IntoView {
                 </a>
                 <a href="/bella">
                     <i class="fas fa-code" />"Bella"
-                </a>
-                <a href="/game-of-life">
-                    <i class="fas fa-square" />"Game of Life"
                 </a>
                 <hr class="divider"/>
                 <a href="/CV.pdf" target="_blank">
